@@ -55,12 +55,13 @@ const Chatbot: React.FC = () => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [sessionId, setSessionId] = useState<string>(() => nanoid()); // Generate sessionId on mount
 
   const conversationContentRef = useRef<HTMLDivElement>(null);
 
   // --- Backend Configuration ---
-//   const BASE_URL = "http://localhost:3000";
-  const BASE_URL = "https://actibot.vercel.app";
+  const BASE_URL = "http://localhost:3000";
+  // const BASE_URL = "https://actibot.vercel.app";
 
   // --- Auto-scroll to the bottom of the messages ---
   useEffect(() => {
@@ -106,7 +107,7 @@ const Chatbot: React.FC = () => {
             "Content-Type": "application/json",
             Accept: "application/x-ndjson",
           },
-          body: JSON.stringify({ query: textToSend }),
+          body: JSON.stringify({ query: textToSend, sessionId }),
         });
 
         if (!response.ok || !response.body) {
@@ -165,7 +166,7 @@ const Chatbot: React.FC = () => {
         setIsTyping(false);
       }
     },
-    [inputMessage, isTyping]
+    [inputMessage, isTyping, sessionId]
   );
 
   // --- Function to reset the chat ---
@@ -180,6 +181,7 @@ const Chatbot: React.FC = () => {
     ]);
     setInputMessage("");
     setIsTyping(false);
+    setSessionId(nanoid()); 
   }, []);
 
   // --- Sanitize and parse markdown for rendering ---
@@ -196,7 +198,12 @@ const Chatbot: React.FC = () => {
       <div className="flex items-center sm:rounded-t-2xl overflow-hidden justify-between border-b bg-gray-400/50 px-4 py-3">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <div className="size-2.5 rounded-full bg-green-500" />
+            {/* <div className="size-2.5 rounded-full bg-green-500" /> */}
+            <img
+              src="/actibot.png"
+              alt="Actibot Logo"
+              className="h-8 w-8 bg-white rounded-sm"
+            />  
             <span className="font-medium text-sm">ActiBot</span>
           </div>
         </div>
@@ -212,10 +219,10 @@ const Chatbot: React.FC = () => {
       </div>
 
       {/* Conversation Area - This now flexes to fill available space */}
-      <Conversation className="flex-1 overflow-hidden">
+      <Conversation className="flex-1">
         <ConversationContent
-          ref={conversationContentRef}
-          className="h-full space-y-4 sm:p-4"
+          // ref={conversationContentRef}
+          className=""
         >
           {messages.map((message) => (
             <Message key={message.id} from={message.role}>
