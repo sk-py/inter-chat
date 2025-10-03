@@ -60,8 +60,8 @@ const Chatbot: React.FC = () => {
   const conversationContentRef = useRef<HTMLDivElement>(null);
 
   // --- Backend Configuration ---
-  const BASE_URL = "http://localhost:3000";
-  // const BASE_URL = "https://actibot.vercel.app";
+  // const BASE_URL = "http://localhost:3000";
+  const BASE_URL = "https://actibot.vercel.app";
 
   // --- Auto-scroll to the bottom of the messages ---
   useEffect(() => {
